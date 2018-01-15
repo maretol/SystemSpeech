@@ -12,7 +12,7 @@ namespace SystemSpeechWPF.Content
         public event EventHandler CanExecuteChanged;
 
         /// <summary>
-        /// Engineの状態で返す
+        /// 
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>

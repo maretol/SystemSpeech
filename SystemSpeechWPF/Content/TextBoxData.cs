@@ -10,6 +10,12 @@ namespace SystemSpeechWPF.Content
 {
     class TextBoxData : INotifyPropertyChanged
     {
+        public TextBoxData()
+        {
+            StartRecognize = new ButtonControl();
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void SetProperty<T>(ref T field, T value, [CallerMemberName]string propertyName = null)
@@ -32,8 +38,7 @@ namespace SystemSpeechWPF.Content
             set { SetProperty(ref result, value); }
         }
 
-        public ButtonControl StartRecognize;
-
-
+        public ButtonControl StartRecognize { get; private set; }
+        
     }
 }
