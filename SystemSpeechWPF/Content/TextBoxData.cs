@@ -5,14 +5,20 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using SystemSpeechWPF.Engine;
+using Prism.Commands;
 
 namespace SystemSpeechWPF.Content
 {
     class TextBoxData : INotifyPropertyChanged
     {
+        public DelegateCommand StartRecognize { get; private set; }
+
+        private RecognizeEngine RecognizeEngine;
+
         public TextBoxData()
         {
-            StartRecognize = new ButtonControl();
+            StartRecognize = new DelegateCommand(this.ConvertExecute, this.CanConvertExecute);
         }
 
 
@@ -38,7 +44,16 @@ namespace SystemSpeechWPF.Content
             set { SetProperty(ref result, value); }
         }
 
-        public ButtonControl StartRecognize { get; private set; }
+
+        private void ConvertExecute()
+        {
+            return;
+        }
+
+        private bool CanConvertExecute()
+        {
+            return false;
+        }
         
     }
 }
