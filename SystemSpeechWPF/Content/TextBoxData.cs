@@ -20,13 +20,14 @@ namespace SystemSpeechWPF.Content
         /// <summary>
         /// 認識エンジン
         /// </summary>
-        private RecognizeEngine RecognizeEngine;
+        private RecognizeEngine _RecognizeEngine;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public TextBoxData()
         {
+            _RecognizeEngine = new RecognizeEngine();
             RecognitionCommand = new DelegateCommand(this.RecognitionExecute, this.CanRecognitionExecute);
         }
 
@@ -69,11 +70,20 @@ namespace SystemSpeechWPF.Content
         }
 
         /// <summary>
+        /// ボタンに表示する開始・停止
+        /// </summary>
+        public string ButtonStatus
+        {
+            get { return (_RecognizeEngine.IsActive) ? "音声認識停止" : "音声認識開始"; }
+        }
+
+        /// <summary>
         /// 認識開始ボタンの実処理
         /// </summary>
         private void RecognitionExecute()
         {
-            return;
+            /// 辞書データを渡して開始処理
+            
         }
 
         /// <summary>
@@ -82,8 +92,7 @@ namespace SystemSpeechWPF.Content
         /// <returns></returns>
         private bool CanRecognitionExecute()
         {
-            return false;
+            return _RecognizeEngine != null;
         }
-        
     }
 }
