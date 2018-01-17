@@ -76,7 +76,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Content\ButtonControl.cs" />
     <Compile Include="Content\TextBoxData.cs" />
     <Compile Include="Engine\RecognizeEngine.cs" />
     <Compile Include="MainWindow.xaml.cs">
