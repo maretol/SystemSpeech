@@ -29,17 +29,27 @@ namespace SystemSpeechWPF.Engine
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// コンストラクタ。
+        /// TODO : イベント関係も処理してね
+        /// </summary>
         public RecognizeEngine()
         {
             Engine = new SpeechRecognitionEngine(new CultureInfo("ja-jp"));
+            Engine.LoadGrammarCompleted += LoadGrammarComplitedEvent;
+            IsGrammarLoaded = false;
             IsActive = false;
         }
 
         /// <summary>
         /// 動いてるかどうか
-        /// こいつも変更通知はしない
         /// </summary>
-        public bool IsActive { get; private set; }
+        private bool isActive;
+        public bool IsActive
+        {
+            get { return isActive; }
+            private set { SetProperty(ref isActive, value); }
+        }
 
         /// <summary>
         /// 音声コマンドのそのままのデータ（行ごとにコマンドにする）
@@ -58,13 +68,23 @@ namespace SystemSpeechWPF.Engine
         }
 
         /// <summary>
+        /// 文法データが読み込まれているかどうか
+        /// </summary>
+        private bool isGrammarLoaded;
+        public bool IsGrammarLoaded
+        {
+            get { return isGrammarLoaded; }
+            private set { SetProperty(ref isGrammarLoaded, value); }
+        }
+
+        /// <summary>
         /// 準備ができてるかどうか
         /// </summary>
         public bool IsReady
         {
             get
             {
-                return !IsActive && !string.IsNullOrEmpty(CommandList);
+                return !IsActive && IsGrammarLoaded;
             }
         }
 
@@ -73,9 +93,28 @@ namespace SystemSpeechWPF.Engine
         /// </summary>
         private void CreateGrammar()
         {
-
+            Engine.UnloadAllGrammars();
+            var gb = new GrammarBuilder();
+            gb.AppendWildcard();
+            gb.Append(new Choices(CommandList.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)));
+            gb.AppendWildcard();
+            var grammar = new Grammar(gb);
+            Task.Factory.StartNew(() => Engine.LoadGrammarAsync(grammar));
         }
 
+        /// <summary>
+        /// 文法データが読み終わったときの合図
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LoadGrammarComplitedEvent(object sender, LoadGrammarCompletedEventArgs e)
+        {
+            IsGrammarLoaded = true;
+        }
+
+        /// <summary>
+        /// 開始、または終了処理
+        /// </summary>
         public void StartOrEndRecognize()
         {
             if (IsActive)
@@ -88,8 +127,7 @@ namespace SystemSpeechWPF.Engine
                 StartRecognize();
             }
         }
-
-
+        
         private void StartRecognize()
         {
             if (IsReady)
