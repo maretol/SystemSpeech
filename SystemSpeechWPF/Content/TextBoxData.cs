@@ -28,6 +28,7 @@ namespace SystemSpeechWPF.Content
         public TextBoxData()
         {
             _RecognizeEngine = new RecognizeEngine();
+            // RecognizeEngineの変更イベントを受け取るやつを追加
             RecognitionCommand = new DelegateCommand(this.RecognitionExecute, this.CanRecognitionExecute);
         }
 
@@ -83,7 +84,8 @@ namespace SystemSpeechWPF.Content
         private void RecognitionExecute()
         {
             /// 辞書データを渡して開始処理
-            
+            _RecognizeEngine.CommandList = CommandList;
+            _RecognizeEngine.StartOrEndRecognize();
         }
 
         /// <summary>
