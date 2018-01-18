@@ -110,6 +110,7 @@ namespace SystemSpeechWPF.Engine
         private void LoadGrammarComplitedEvent(object sender, LoadGrammarCompletedEventArgs e)
         {
             IsGrammarLoaded = true;
+            StartRecognize();
         }
 
         /// <summary>
@@ -124,7 +125,6 @@ namespace SystemSpeechWPF.Engine
             else
             {
                 CreateGrammar();
-                StartRecognize();
             }
         }
         
@@ -132,8 +132,8 @@ namespace SystemSpeechWPF.Engine
         {
             if (IsReady)
             {
-                IsActive = true;
                 Task.Factory.StartNew(() => Engine.RecognizeAsync());
+                IsActive = true;
             }
         }
 

@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using SystemSpeechWPF.Engine;
 using Prism.Commands;
+using Prism.Mvvm;
 
 namespace SystemSpeechWPF.Content
 {
-    class TextBoxData : INotifyPropertyChanged
+    class TextBoxData : BindableBase
     {
         /// <summary>
         /// 認識開始ボタンのコマンド
@@ -30,24 +31,6 @@ namespace SystemSpeechWPF.Content
             _RecognizeEngine = new RecognizeEngine();
             // RecognizeEngineの変更イベントを受け取るやつを追加
             RecognitionCommand = new DelegateCommand(this.RecognitionExecute, this.CanRecognitionExecute);
-        }
-
-        /// <summary>
-        /// INotifyPropertyChanged のイベント
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// プロパティの変更処理
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="field"></param>
-        /// <param name="value"></param>
-        /// <param name="propertyName"></param>
-        private void SetProperty<T>(ref T field, T value, [CallerMemberName]string propertyName = null)
-        {
-            field = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>
@@ -94,7 +77,7 @@ namespace SystemSpeechWPF.Content
         /// <returns></returns>
         private bool CanRecognitionExecute()
         {
-            return _RecognizeEngine != null;
+            return _RecognizeEngine != null && string.IsNullOrWhiteSpace(CommandList);
         }
     }
 }
