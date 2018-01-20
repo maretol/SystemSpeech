@@ -8,7 +8,7 @@ using System.Speech.Recognition;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SystemSpeechWPF.Engine
+namespace SystemSpeechWPF.Model
 {
     class RecognizeEngine : INotifyPropertyChanged
     {

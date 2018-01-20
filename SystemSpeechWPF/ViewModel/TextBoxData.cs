@@ -5,11 +5,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using SystemSpeechWPF.Engine;
+using SystemSpeechWPF.Model;
 using Prism.Commands;
 using Prism.Mvvm;
 
-namespace SystemSpeechWPF.Content
+namespace SystemSpeechWPF.ViewModel
 {
     class TextBoxData : BindableBase
     {
