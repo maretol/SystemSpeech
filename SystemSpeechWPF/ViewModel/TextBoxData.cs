@@ -77,7 +77,7 @@ namespace SystemSpeechWPF.ViewModel
         /// <returns></returns>
         private bool CanRecognitionExecute()
         {
-            return _RecognizeEngine != null && string.IsNullOrWhiteSpace(CommandList);
+            return _RecognizeEngine != null && !string.IsNullOrWhiteSpace(CommandList);
         }
     }
 }
