@@ -40,7 +40,11 @@ namespace SystemSpeechWPF.ViewModel
         public string CommandList
         {
             get { return commandList; }
-            set { SetProperty(ref commandList, value); }
+            set
+            {
+                SetProperty(ref commandList, value);
+                RecognitionCommand.RaiseCanExecuteChanged();
+            }
         }
 
         /// <summary>

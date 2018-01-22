@@ -37,6 +37,7 @@ namespace SystemSpeechWPF.Model
         {
             Engine = new SpeechRecognitionEngine(new CultureInfo("ja-jp"));
             Engine.LoadGrammarCompleted += LoadGrammarComplitedEvent;
+            Engine.SetInputToDefaultAudioDevice();
             IsGrammarLoaded = false;
             IsActive = false;
         }
