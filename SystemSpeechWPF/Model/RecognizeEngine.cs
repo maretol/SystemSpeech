@@ -36,7 +36,8 @@ namespace SystemSpeechWPF.Model
         public RecognizeEngine()
         {
             Engine = new SpeechRecognitionEngine(new CultureInfo("ja-jp"));
-            Engine.LoadGrammarCompleted += LoadGrammarComplitedEvent;
+            Engine.LoadGrammarCompleted += LoadGrammarComplitedEventHandler;
+            Engine.SpeechRecognized += RecognitionEventHandler;
             Engine.SetInputToDefaultAudioDevice();
             IsGrammarLoaded = false;
             IsActive = false;
@@ -103,15 +104,24 @@ namespace SystemSpeechWPF.Model
             Task.Factory.StartNew(() => Engine.LoadGrammarAsync(grammar));
         }
 
+
         /// <summary>
         /// 文法データが読み終わったときの合図
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void LoadGrammarComplitedEvent(object sender, LoadGrammarCompletedEventArgs e)
+        private void LoadGrammarComplitedEventHandler(object sender, LoadGrammarCompletedEventArgs e)
         {
             IsGrammarLoaded = true;
             StartRecognize();
+        }
+
+        private void RecognitionEventHandler(object sender, RecognitionEventArgs args)
+        {
+            var confidence = args.Result.Confidence;
+            var text = args.Result.Text;
+            var result = $"[Recognition] {confidence:f3} : {text}";
+            ResultList += result;
         }
 
         /// <summary>
@@ -135,6 +145,7 @@ namespace SystemSpeechWPF.Model
             {
                 Task.Factory.StartNew(() => Engine.RecognizeAsync());
                 IsActive = true;
+                ResultList += "[Message] 認識開始";
             }
         }
 
@@ -143,6 +154,7 @@ namespace SystemSpeechWPF.Model
             if (IsActive)
             {
                 Engine.RecognizeAsyncStop();
+                ResultList += "[Message] 認識終了";
             }
         }
     }

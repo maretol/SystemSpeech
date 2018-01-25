@@ -29,7 +29,7 @@ namespace SystemSpeechWPF.ViewModel
         public TextBoxData()
         {
             _RecognizeEngine = new RecognizeEngine();
-            // RecognizeEngineの変更イベントを受け取るやつを追加
+            _RecognizeEngine.PropertyChanged += EngineMovedEventHandler;
             RecognitionCommand = new DelegateCommand(this.RecognitionExecute, this.CanRecognitionExecute);
         }
 
@@ -82,6 +82,23 @@ namespace SystemSpeechWPF.ViewModel
         private bool CanRecognitionExecute()
         {
             return _RecognizeEngine != null && !string.IsNullOrWhiteSpace(CommandList);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void EngineMovedEventHandler(object sender, PropertyChangedEventArgs args)
+        {
+            if (args.PropertyName == "ResultList")
+            {
+                Result = _RecognizeEngine.ResultList;
+            }
+            else if (args.PropertyName == "IsActive")
+            {
+                RecognitionCommand.RaiseCanExecuteChanged();
+            }
         }
     }
 }
