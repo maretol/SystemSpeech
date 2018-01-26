@@ -10,7 +10,7 @@
     <Window.DataContext>
         <localContent:TextBoxData/>
     </Window.DataContext>
-    <Grid>
+    <Grid Focusable="True">
         <Grid Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
