@@ -36,11 +36,21 @@ namespace SystemSpeechWPF.Model
         public RecognizeEngine()
         {
             Engine = new SpeechRecognitionEngine(new CultureInfo("ja-jp"));
-            Engine.LoadGrammarCompleted += LoadGrammarComplitedEventHandler;
-            Engine.SpeechRecognized += RecognitionEventHandler;
+            SetEvents();
             Engine.SetInputToDefaultAudioDevice();
             IsGrammarLoaded = false;
             IsActive = false;
+        }
+
+        /// <summary>
+        /// 各種イベントの登録
+        /// </summary>
+        private void SetEvents()
+        {
+            Engine.LoadGrammarCompleted += LoadGrammarComplitedEventHandler;
+            Engine.SpeechRecognized += RecognitionEventHandler;
+            Engine.SpeechDetected += DetectedEventHandler;
+            Engine.SpeechHypothesized += HypothesizedEventHandler;
         }
 
         /// <summary>
@@ -116,12 +126,29 @@ namespace SystemSpeechWPF.Model
             StartRecognize();
         }
 
+        /// <summary>
+        /// 認識イベントの実行
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void RecognitionEventHandler(object sender, RecognitionEventArgs args)
         {
             var confidence = args.Result.Confidence;
             var text = args.Result.Text;
-            var result = $"[Recognition] {confidence:f3} : {text}";
-            ResultList += result;
+            ResultList += $"[Recognition] {confidence:f3} : {text}\n";
+        }
+
+        private void DetectedEventHandler(object sender, SpeechDetectedEventArgs args)
+        {
+            var timespan = args.AudioPosition;
+            ResultList += $"[Detection] {timespan}\n";
+        }
+
+        private void HypothesizedEventHandler(object sender, SpeechHypothesizedEventArgs args)
+        {
+            var confidence = args.Result.Confidence;
+            var text = args.Result.Text;
+            ResultList += $"[Hypothesize] {confidence:f3} : {text}\n";
         }
 
         /// <summary>
@@ -145,7 +172,7 @@ namespace SystemSpeechWPF.Model
             {
                 Task.Factory.StartNew(() => Engine.RecognizeAsync());
                 IsActive = true;
-                ResultList += "[Message] 認識開始";
+                ResultList += "[Message] 認識開始\n";
             }
         }
 
@@ -154,7 +181,8 @@ namespace SystemSpeechWPF.Model
             if (IsActive)
             {
                 Engine.RecognizeAsyncStop();
-                ResultList += "[Message] 認識終了";
+                IsActive = false;
+                ResultList += "[Message] 認識終了\n";
             }
         }
     }

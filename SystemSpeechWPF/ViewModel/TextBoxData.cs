@@ -31,6 +31,7 @@ namespace SystemSpeechWPF.ViewModel
             _RecognizeEngine = new RecognizeEngine();
             _RecognizeEngine.PropertyChanged += EngineMovedEventHandler;
             RecognitionCommand = new DelegateCommand(this.RecognitionExecute, this.CanRecognitionExecute);
+            UpdateButtonStatus();
         }
 
         /// <summary>
@@ -60,9 +61,11 @@ namespace SystemSpeechWPF.ViewModel
         /// <summary>
         /// ボタンに表示する開始・停止
         /// </summary>
+        private string buttonStatus;
         public string ButtonStatus
         {
-            get { return (_RecognizeEngine.IsActive) ? "音声認識停止" : "音声認識開始"; }
+            get { return buttonStatus; }
+            set { SetProperty(ref buttonStatus, (_RecognizeEngine.IsActive) ? "音声認識停止" : "音声認識開始"); }
         }
 
         /// <summary>
@@ -84,6 +87,11 @@ namespace SystemSpeechWPF.ViewModel
             return _RecognizeEngine != null && !string.IsNullOrWhiteSpace(CommandList);
         }
 
+        private void UpdateButtonStatus()
+        {
+            ButtonStatus = "";
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -97,7 +105,7 @@ namespace SystemSpeechWPF.ViewModel
             }
             else if (args.PropertyName == "IsActive")
             {
-                RecognitionCommand.RaiseCanExecuteChanged();
+                UpdateButtonStatus();
             }
         }
     }
